@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Demoliq!{% endblock %}</title>
+        <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/open-sans.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <a href="{{ path('home') }}"><div><img src="{{ asset('img/logo.png') }}" class="logo" alt="logo" />Demoliq</div></a>
+            </header>
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+            <footer>
+                <nav class="crumbs">
+                    <ol>
+                        <li class="crumb"><a href="{{ path('home') }}">Accueil</a></li>
+                        <li class="crumb"><a href="{{ path('article') }}">Article</a></li>
+                        <li class="crumb"><a href="{{ path('faq') }}">FAQ</a></li>
+                        <li class="crumb"><a href="{{ path('cgu') }}">CGU</a></li>
+                    </ol>
+                </nav>
+            </footer>
+        </div>
+    </body>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+</html>
