@@ -3,11 +3,47 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Form\QuestionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuestionController extends AbstractController
 {
+    /**
+     * @Route(
+     *    "/questions/ajouter",
+     *    name="question_create",
+     *    methods={"GET", "POST"}
+     *    )
+     */
+    public function create(Request $request)
+    {
+        $question = new Question();
+
+        $questionForm = $this->createForm(QuestionType::class, $question);
+
+        $questionForm->handleRequest($request);
+
+        if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($question);
+            $em->flush();
+
+            //crée un message flash à afficher sur la prochaine page
+            $this->addFlash('success', 'Merci pour votre participation !');
+
+            //redirige vers la page de détails de cette question
+            return $this->redirectToRoute('question_detail', ['id' => $question->getId()]);
+        }
+
+        return $this->render('question/create.html.twig', [
+            "questionForm" => $questionForm->createView()
+        ]);
+    }
+
+    // Simplifiable en public function details(Question $question) qui fera le SELECT by Id automatiquement
+
     /**
      * @Route(
      *     "/questions/{id}",
@@ -17,7 +53,6 @@ class QuestionController extends AbstractController
      */
     public function details(int $id)
     {
-        // Simplifiable en public function details(Question $question) qui fera le SELECT by Id automatiquement
         $questionRepository = $this->getDoctrine()->getRepository(Question::class);
 
         $question = $questionRepository->find($id);
