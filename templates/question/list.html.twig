@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}Débattre{% endblock %}
+
+{%  block content %}
+    <h1>Les questions à débattre</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Question</th>
+            <th>Votes</th>
+            <th>Actions</th>
+        </tr>
+
+        {# Affichage des questions ici #}
+        {%  for question in questions %}
+        <tr>
+            <td>{{ question.title }}</td>
+            <td>{{ question.description }}</td>
+            <td>{{ question.supports }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,8 +1,44 @@
 # ProjetSymfony-DebatNational
 ProjetSymfony-DebatNational
 
-Création des classes via :
-php bin\console make:controller
+##Versions :
+- PHP : 7.2.14
+- Symfony : 4.2
+- Composer : 1.8.0
+- MySQL : 5.7.24
+- phpMyAdmin : 4.8.4
 
-Debug des routes via :
+##Symfony sous Apache
+```composer
+composer require apache-pack
+```
+
+##Création des classes via :
+```symfony
+php bin\console make:controller
+```
+
+##Debug des routes via :
+```symfony
 php bin\console debug:router
+```
+
+##Création d'Entity (relation BDD) :
+```symfony
+php bin\console make:entity
+```
+
+##Création de la BDD tel que configurée dans le .env :
+```symfony
+php bin\console doctrine:database:create
+```
+
+##Créer les tables dans la BDD (pas en prod !) :
+```symfony
+php bin\console doctrine:schema:update --force
+```
+
+##Dumper la BDD en cas de doute :
+```symfony
+php bin\console doctrine:schema:update --dump-sql
+```
