@@ -59,3 +59,12 @@ php bin\console cache:warmup
 php bin\console make:form
 ```
 
+##Créer sa propre commande Symfony
+```symfony
+php bin\console make:command
+```
+
+##Et du coup l'utiliser pour les fixtures
+```symfony
+php bin\console app:fixtures
+```
