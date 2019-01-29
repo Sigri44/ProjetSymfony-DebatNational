@@ -42,3 +42,14 @@ php bin\console doctrine:schema:update --force
 ```symfony
 php bin\console doctrine:schema:update --dump-sql
 ```
+
+##Vider le cache (param env)
+```symfony
+php bin\console cache:clear
+php bin\console cache:clear --end=dev
+```
+
+##Regénérer le cache en prod
+```symfony
+php bin\console cache:warmup
+```
