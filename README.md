@@ -53,3 +53,9 @@ php bin\console cache:clear --end=dev
 ```symfony
 php bin\console cache:warmup
 ```
+
+##Créer un formulaire
+```symfony
+php bin\console make:form
+```
+
