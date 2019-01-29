@@ -9,7 +9,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuestionController extends AbstractController
 {
     /**
-     * @Route("/questions", name="question_list")
+     * @Route(
+     *     "/questions/{id}",
+     *     name="question_detail",
+     *     requirements={"id": "\d+"}
+     *     )
+     */
+    public function details(int $id)
+    {
+        // Simplifiable en public function details(Question $question) qui fera le SELECT by Id automatiquement
+        $questionRepository = $this->getDoctrine()->getRepository(Question::class);
+
+        $question = $questionRepository->find($id);
+
+        if (!$question) {
+            throw $this->createNotFoundException("Cette question n'existe pas !");
+        }
+
+        return $this->render('question/detail.html.twig',
+            compact("question"));
+    }
+
+    /**
+     * @Route("/questions/liste",
+     *     name="question_list"),
+     *     methods={"GET"}
      */
     public function list()
     {
