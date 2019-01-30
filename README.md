@@ -28,7 +28,12 @@ php bin\console debug:router
 php bin\console make:entity
 ```
 
-##Création de la BDD tel que configurée dans le .env :
+##Regénérer les Getters/Setters des Entity
+```symfony
+php bin\console make:entity --regenerate
+```
+
+##Création de la BDD tel que configuré dans le .env :
 ```symfony
 php bin\console doctrine:database:create
 ```

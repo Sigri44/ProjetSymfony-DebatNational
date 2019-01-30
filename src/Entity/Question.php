@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,16 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Question
 {
-    //Cette fonction sera appelée avant l'INSERT des questions
-    //donc on en profite pour renseigner les valeurs par défaut
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersist()
+    //valeurs par défaut
+    public function __construct()
     {
         $this->setCreationDate((new \DateTime()));
         $this->setSupports(0);
         $this->setStatus('debating');
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -57,6 +56,11 @@ class Question
      * @ORM\Column(type="string", length=20)
      */
     private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="Question", orphanRemoval=true)
+     */
+    private $messages;
 
     public function getId(): ?int
     {
@@ -119,6 +123,37 @@ class Question
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getQuestion() === $this) {
+                $message->setQuestion(null);
+            }
+        }
 
         return $this;
     }

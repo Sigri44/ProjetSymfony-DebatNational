@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
 use App\Entity\Question;
+use App\Form\MessageType;
 use App\Form\QuestionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +22,7 @@ class QuestionController extends AbstractController
     public function create(Request $request)
     {
         $question = new Question();
-
         $questionForm = $this->createForm(QuestionType::class, $question);
-
         $questionForm->handleRequest($request);
 
         if ($questionForm->isSubmitted() && $questionForm->isValid()) {
@@ -43,7 +43,6 @@ class QuestionController extends AbstractController
     }
 
     // Simplifiable en public function details(Question $question) qui fera le SELECT by Id automatiquement
-
     /**
      * @Route(
      *     "/questions/{id}",
@@ -51,7 +50,7 @@ class QuestionController extends AbstractController
      *     requirements={"id": "\d+"}
      *     )
      */
-    public function details(int $id)
+    public function details(int $id, Request $request)
     {
         $questionRepository = $this->getDoctrine()->getRepository(Question::class);
 
@@ -61,8 +60,33 @@ class QuestionController extends AbstractController
             throw $this->createNotFoundException("Cette question n'existe pas !");
         }
 
-        return $this->render('question/detail.html.twig',
-            compact("question"));
+        //return $this->render('question/detail.html.twig', compact("question"));
+
+        // Affichage et traitement du formulaire "question_detail"
+        // Liste des messages
+        $messages = $question->getMessages();
+
+        // Formulaire de dépôt de message
+        $messageM = new Message();
+        $messageM->setQuestion($question);
+        $messageForm = $this->createForm(MessageType::class, $messageM);
+        $messageForm->handleRequest($request);
+
+        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($messageM);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre message vient d\'être ajouté.');
+
+            return $this->redirectToRoute('question_detail', ['id' => $question->getId()]);
+        }
+
+        return $this->render('question/detail.html.twig', [
+            "question" => $question,
+            "messages" => $messages,
+            "messageForm" => $messageForm->createView()
+        ]);
     }
 
     /**
